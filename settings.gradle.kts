@@ -1,0 +1,1 @@
+rootProject.name = "point-fairy-v2"

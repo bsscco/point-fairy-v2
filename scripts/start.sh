@@ -1,0 +1,1 @@
+java -jar point-fairy-v2-*.jar

@@ -1,0 +1,1 @@
+kill -9 $(ps x | grep "point-fairy-v2" | grep -v grep | grep -oE "[0-9]+" | head -n 1)
