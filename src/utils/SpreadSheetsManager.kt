@@ -75,32 +75,6 @@ class SpreadSheetsManager(private val httpClient: HttpClient) {
         return statusRows.filter { it.status != StatusValue.NONE.name }
     }
 
-    suspend fun appendCardUrlRow(nickname: String, cardId: Int) {
-        httpClient.use { client ->
-            client.post<HttpResponse>(getCardUrlRowAppendingUrl()) {
-                setRequestHeader()
-                body = TextContent(
-                    contentType = ContentType.Application.Json,
-                    text = createNewCardUrlRowValue(nickname, cardId)
-                )
-            }
-        }
-    }
-
-    private fun getCardUrlRowAppendingUrl(): String {
-        val encodedSheetsId = toUrlEncoded(Config.SHEETS_ID)
-        val encodedSheetRange = toUrlEncoded(Config.CARD_SHEET_RANGE)
-        return "https://sheets.googleapis.com/v4/spreadsheets/$encodedSheetsId/values/$encodedSheetRange:append?valueInputOption=USER_ENTERED"
-    }
-
-    private fun createNewCardUrlRowValue(nickname: String, cardId: Int): String {
-        return """
-            {
-                values: [["${getCurrentDateString()}", "$nickname", "https://ohou.se/cards/$cardId"]]
-            }
-        """
-    }
-
     private fun getCurrentDateString(): String {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd")
             .let { LocalDateTime.now().format(it) }

@@ -22,7 +22,6 @@ class AutoUploadCardUrlsProcessor(call: ApplicationCall) : RequestProcessor(call
     override suspend fun process() {
         try {
             getNewStatusProdReviewPairs().let {
-                appendCardUrls(it)
                 changeStatusesToNone(it)
             }
 
@@ -60,15 +59,6 @@ class AutoUploadCardUrlsProcessor(call: ApplicationCall) : RequestProcessor(call
 
     private fun filterByNewerThanStatusUpdatedDate(statusProdReviewRows: List<StatusProdReviewPair>): List<StatusProdReviewPair> {
         return statusProdReviewRows.filter { statusProdReview -> statusProdReview.productionReviewRow.createdAt >= statusProdReview.statusRow.updatedAt }
-    }
-
-    private suspend fun appendCardUrls(statusReviewPairs: List<StatusProdReviewPair>) {
-        statusReviewPairs.forEach {
-            sheetsManager.appendCardUrlRow(
-                it.statusRow.nickname,
-                it.productionReviewRow.cardId
-            )
-        }
     }
 
     private suspend fun changeStatusesToNone(statusReviewPairs: List<StatusProdReviewPair>) {
